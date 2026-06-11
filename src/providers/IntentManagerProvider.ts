@@ -3160,23 +3160,22 @@ export class IntentManagerProvider implements vscode.FileSystemProvider, vscode.
 		}
 		let enumString : string = "enumeration {\n";
 		// sort the identities
-		let keys = Object.keys(identities).sort();
-		for (var i = 0; i < keys.length; i++) {
-		  let identifyRef = keys[i];
-		  let includeModuleRef = identifyRef && identifyRef.includes(":");
-		  if (includeModuleRef) {
-			let nameAndModule = identifyRef.split(":");
-			if (nameAndModule.length > 1) {
-			  identifyRef = nameAndModule[1].trim();
+		const keys = Object.keys(identities).sort();
+		for (let i = 0; i < keys.length; i++) {
+			let identifyRef = keys[i];
+			const includeModuleRef = identifyRef && identifyRef.includes(":");
+			if (includeModuleRef) {
+				const nameAndModule = identifyRef.split(":");
+				if (nameAndModule.length > 1) {
+					identifyRef = nameAndModule[1].trim();
+				}
 			}
-		  }
-		  enumString =
+			enumString =
 			enumString +
 			"\n" +
 			"          enum "+identifyRef+";";
 		}
-		enumString = enumString + "}\n";
-	  
+		enumString = enumString + "}\n";	  
 		return enumString;
 	}
 
@@ -3260,15 +3259,17 @@ export class IntentManagerProvider implements vscode.FileSystemProvider, vscode.
 				//
 				if(a.baseType === "identityref")
 				{
-					const idKeys = a.identities?.[a.identityName] ? Object.keys(a.identities[a.identityName]) : [];
-					this.collectAuditPrefixFromIdentityRefKey(auditModulePrefixes, a.identityName);
+					const idMap = (a.identityName && a.identities) ? a.identities[a.identityName] : undefined;
+					const idKeys = idMap ? Object.keys(idMap) : [];
+					if (a.identityName)
+						this.collectAuditPrefixFromIdentityRefKey(auditModulePrefixes, a.identityName);
 					for (const line of idKeys)
 						this.collectAuditPrefixFromIdentityRefKey(auditModulePrefixes, line);
 					yang.push(`  type enumeration {`);
 					yang.push(
 						...idKeys.map(line => {
-						  const enumName = line.replace(/^.*:/, ""); // remove everything before last :
-						  return `    enum ${enumName};`;
+							const enumName = line.replace(/^.*:/, ""); // remove everything before last :
+							return `    enum ${enumName};`;
 						})
 					  );
 					yang.push(`  }`);
@@ -3404,8 +3405,7 @@ export class IntentManagerProvider implements vscode.FileSystemProvider, vscode.
 					return part.includes(":") ? part.split(":")[1] : part;
 				});
 
-				const key = keyParts.join("/");
-			  
+				const key = keyParts.join("/");			  
 				const lastPrefix = parts[parts.length - 1].split(":")[0];
 				module_ref[key] = lastPrefix;
 
