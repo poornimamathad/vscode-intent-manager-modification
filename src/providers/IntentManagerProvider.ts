@@ -3271,7 +3271,7 @@ export class IntentManagerProvider implements vscode.FileSystemProvider, vscode.
 							const enumName = line.replace(/^.*:/, ""); // remove everything before last :
 							return `    enum ${enumName};`;
 						})
-					  );
+					);
 					yang.push(`  }`);
 				}
 				else
@@ -3327,7 +3327,7 @@ export class IntentManagerProvider implements vscode.FileSystemProvider, vscode.
 		json.attributes = [
 			...json.attributes.filter((a: { nodetype: string }) => a.nodetype === "property" || a.nodetype === "propertylist"),
 			...json.attributes.filter((a: { nodetype: string }) => a.nodetype !== "property" && a.nodetype !== "propertylist")
-		  ];
+		];
 		
 		const yang: string[] = [];
 
